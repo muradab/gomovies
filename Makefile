@@ -1,7 +1,8 @@
-# Include variables from the .envrc file
-include .envrc
-
-
+# Load variables from the .env file
+ifneq (,$(wildcard .env))
+    include .env
+    export $(shell sed 's/=.*//' .env)
+endif
 # ==================================================================================== # 
 # HELPERS
 # ==================================================================================== #
