@@ -7,13 +7,20 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 )
 
 func (app *application) serve() error {
+
+	if envPort := os.Getenv("PORT"); envPort != "" {
+		if port, err := strconv.Atoi(envPort); err == nil {
+			app.config.port = port
+		}
+	}
 	srv := &http.Server{
-		Addr:    fmt.Sprintf(":%d", app.config.port),
+		Addr:    fmt.Sprintf("0.0.0.0:%d", app.config.port),
 		Handler: app.routes(),
 
 		IdleTimeout:  time.Minute,
