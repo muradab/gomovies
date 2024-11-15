@@ -40,8 +40,13 @@ db/migrations/new:
 
 ## db/migrations/up: apply all up database migrations
 .PHONY: db/migrations/up
-db/migrations/up: confirm
+db/migrations/up: 
 	@echo 'Running up migrations...'
+	@if ! [ -x "$(command -v migrate)" ]; then \
+		echo "Installing migrate tool..."; \
+		curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz | tar xvz && \
+		mv migrate.linux-amd64 /usr/local/bin/migrate; \
+	fi
 	migrate -path ./migrations -database ${GOMOVIES_DB_DSN} up
 
 
